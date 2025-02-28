@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "rss-parser": "^3.13.0",
+    "electron": "^latest"
+  },
+  "devDependencies": {
+    "electron": "^34.2.0"
+  },
+  "name": "medium-widget",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  }
+}
