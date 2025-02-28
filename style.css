@@ -9,16 +9,18 @@
 
 /* ===== Background Transparency (Glassmorphism) ===== */
 body {
-    background: #121212;
-    overflow-y: hidden;
-}
+    background: black;
+    overflow: hidden;
+    color: #EAEAEA;
+    font-family: Arial, sans-serif;
+} 
 
 /* ===== Main Widget ===== */
 .widget {
     width: 100%;
     height: auto; /* Adjust height dynamically */
     min-height: 100px; /* Prevents collapsing */
-    max-height: 90vh; /* Prevents overflowing the screen */
+    max-height: 85vh; /* Prevents overflowing the screen */
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     background-color: rgba(17, 25, 40, 0.75);
@@ -72,7 +74,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-height: 95vh;
+    max-height: calc(100vh - 127px);
     padding-right: 10px;
     overflow-y: auto;
     scrollbar-width: thin;
@@ -149,6 +151,73 @@ body {
     text-overflow: ellipsis;
     color: #B0B0B0;
 }
+
+#topic-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #1a1a1a;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+#topic-input {
+    background: #121212;
+    color: white;
+    border: none;
+    padding: 5px;
+    font-size: 16px;
+    outline: none;
+    border-bottom: 2px solid #FF4D4D;
+    flex: 1;
+}
+
+.landing-container {
+    text-align: center;
+    margin-top: 20%;
+}
+
+#topic-input {
+    padding: 10px;
+    font-size: 18px;
+    width: 250px;
+    border-radius: 5px;
+    border: none;
+}
+
+#search-btn {
+    padding: 10px;
+    font-size: 18px;
+    background: #FF4D4D;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Medium Widget Page */
+#topic-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #1a1a1a;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+#topic-input {
+    background: #121212;
+    color: white;
+    border: none;
+    padding: 5px;
+    font-size: 16px;
+    outline: none;
+    border-bottom: 2px solid #FF4D4D;
+    flex: 1;
+}
+
 
 /* ===== Responsive Design for Smaller Screens ===== */
 @media (max-width: 400px) {

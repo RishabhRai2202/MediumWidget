@@ -20,7 +20,6 @@ app.whenReady().then(() => {
     });
 
     mainWindow.loadFile('index.html');
-    mainWindow.webContents.openDevTools();
     ipcMain.on('close-widget', () => {
         if (mainWindow) mainWindow.close();
     });

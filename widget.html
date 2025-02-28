@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">MEDIUM WIDGET</div>
+
+    <div>
+        <button class="close-btn" id="close-btn">X</button>
+    </div>
+   
+    <div id="topic-container">
+        <label for="topic-input">Topic: </label>
+        <input type="text" id="topic-input" placeholder="Enter a topic..." autofocus>
+        <button id="search-btn">→</button>
+    </div>
+    <script>
+        document.getElementById("search-btn").addEventListener("click", () => {
+        const topic = document.getElementById("topic-input").value.trim();
+        if (topic) {
+            localStorage.setItem("selectedTopic", topic);
+            window.location.href = "widget.html";
+        }
+    });
+    </script>
+    <div class="content" id="stories-container">Loading...</div>
+    <script src="script.js"></script>
+</body>
+</html>
