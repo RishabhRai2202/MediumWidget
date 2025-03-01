@@ -6,8 +6,8 @@ let mainWindow;
 
 app.whenReady().then(() => {
     mainWindow = new BrowserWindow({  
-        width: 320,
-        height: 450,
+        width: 422,
+        height: 454,
         alwaysOnTop: false,
         autoHideMenuBar: true,
         transparent: true,

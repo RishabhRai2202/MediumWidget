@@ -153,7 +153,7 @@ body {
 }
 
 #topic-container {
-    display: flex;
+    display: flow-root;
     align-items: center;
     gap: 10px;
     padding: 10px;
@@ -197,15 +197,6 @@ body {
 }
 
 /* Medium Widget Page */
-#topic-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    background: #1a1a1a;
-    border-radius: 5px;
-    margin: 10px;
-}
 
 #topic-input {
     background: #121212;
