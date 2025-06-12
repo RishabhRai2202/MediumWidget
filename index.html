@@ -4,28 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choose Your Topic</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        .quote-container {
+            transition: opacity 1s ease-in-out;
+        }
+        .fade-in {
+            opacity: 1;
+        }
+        .fade-out {
+            opacity: 0;
+        }
+        .search-btn {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        .focus-ring:focus-within {
+             box-shadow: 0 0 0 2px #3B82F6;
+        }
+    </style>
 </head>
-<body>
-    <div class="landing-container">
-        <h1>What topic would you like to see?</h1>
-        <input type="text" id="topic-input" placeholder="Enter a topic...">
-        <button id="search-btn">→</button>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+    <div class="absolute inset-0 bg-grid-gray-700/[0.2] [mask-image:linear-gradient(to_bottom,white_10%,transparent_100%)]"></div>
+    <div class="relative z-10 text-center p-8 max-w-2xl w-full">
+        <!-- Quote Display -->
+        <div id="quote-container" class="quote-container h-24 mb-8 flex items-center justify-center">
+            <p id="quote-text" class="text-2xl italic text-gray-400"></p>
+        </div>
+
+        <!-- Main Interaction Area -->
+        <div class="bg-gray-800/50 backdrop-blur-sm p-10 rounded-2xl shadow-2xl border border-gray-700">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gray-100">What topic are you curious about?</h1>
+            <p class="text-gray-400 mb-8">Enter a subject to explore related content.</p>
+            <div class="flex items-center justify-center max-w-md mx-auto bg-gray-900/50 rounded-full p-2 border border-gray-600 focus-ring">
+                <input type="text" id="topic-input" placeholder="e.g., 'Artificial Intelligence', 'Roman History'..." class="w-full bg-transparent text-white placeholder-gray-500 border-none outline-none px-6 py-3 text-lg">
+                <button id="search-btn" class="search-btn bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        document.getElementById("search-btn").addEventListener("click", () => {
-            const topic = document.getElementById("topic-input").value.trim();
-            if (topic) {
-                localStorage.setItem("selectedTopic", topic);
-                window.location.href = "widget.html";
-            }
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const quotes = [
+                { text: "A reader lives a thousand lives before he dies . . . The man who never reads lives only one.", author: "George R.R. Martin" },
+                { text: "The more that you read, the more things you will know. The more that you learn, the more places you'll go.", author: "Dr. Seuss" },
+                { text: "Reading is essential for those who seek to rise above the ordinary.", author: "Jim Rohn" },
+                { text: "There is more treasure in books than in all the pirate's loot on Treasure Island.", author: "Walt Disney" },
+                { text: "A mind needs books as a sword needs a whetstone, if it is to keep its edge.", author: "Tyrion Lannister" }
+            ];
 
-        document.getElementById("topic-input").addEventListener("keypress", (event) => {
-            if (event.key === "Enter") {
-                document.getElementById("search-btn").click();
+            const quoteContainer = document.getElementById('quote-container');
+            const quoteText = document.getElementById('quote-text');
+            let currentQuoteIndex = 0;
+
+            function showNextQuote() {
+                // Fade out the current quote
+                quoteContainer.classList.add('fade-out');
+
+                setTimeout(() => {
+                    // Update the quote index
+                    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                    
+                    // Update the text and author
+                    quoteText.innerHTML = `"${quotes[currentQuoteIndex].text}"`;
+
+                    // Fade in the new quote
+                    quoteContainer.classList.remove('fade-out');
+                }, 1000); // This should match the CSS transition duration
             }
+
+            // Initial quote display
+            quoteText.innerHTML = `"${quotes[currentQuoteIndex].text}"`;
+            quoteContainer.classList.add('fade-in');
+
+            // Change quote every 5 seconds
+            setInterval(showNextQuote, 5000);
+
+            // Search functionality
+            const searchBtn = document.getElementById("search-btn");
+            const topicInput = document.getElementById("topic-input");
+
+            function handleSearch() {
+                const topic = topicInput.value.trim();
+                if (topic) {
+                    // Store the selected topic in localStorage so widget.html can access it
+                    localStorage.setItem("selectedTopic", topic);
+                    // Redirect to the widget page
+                    window.location.href = "widget.html";
+                }
+            }
+
+            searchBtn.addEventListener("click", handleSearch);
+
+            topicInput.addEventListener("keypress", (event) => {
+                if (event.key === "Enter") {
+                    searchBtn.click();
+                }
+            });
         });
     </script>
 </body>

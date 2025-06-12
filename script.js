@@ -1,46 +1,67 @@
 const { ipcRenderer } = require("electron");
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('close-btn').addEventListener('click', () => {
-        ipcRenderer.send('close-widget');
-    });
 
-    const topicInput = document.getElementById("topic-input");
-    console.log("topicInput", topicInput);
-    const container = document.getElementById("stories-container");
+        document.addEventListener("DOMContentLoaded", () => {
+            const topicInput = document.getElementById("topic-input");
+            const storiesContainer = document.getElementById("stories-container");
+            const closeBtn = document.getElementById('close-btn');
 
-    // Load topic from localStorage
-    let topic = localStorage.getItem("selectedTopic") || "Technology";
-    topicInput.value = topic;
-    fetchStories(topic);
-
-    async function fetchStories(topic) {
-        try {
-            const stories = await ipcRenderer.invoke("fetch-stories", topic);
-            container.innerHTML = ""; // Clear old stories
-
-            stories.forEach(story => {
-                const storyDiv = document.createElement("div");
-                storyDiv.className = "story";
-                storyDiv.innerHTML = `
-                        <img src="${story.image || 'https://imgs.search.brave.com/JXNyc7dlbgD2KqdqJAGFI4cCImHQamHiiyFsBs6QPkE/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA1LzA0LzI4Lzk2/LzM2MF9GXzUwNDI4/OTYwNV96ZWhKaUsw/dEN1WkxQMk1kZkZC/cGNKZE9WeEtMblhn/MS5qcGc'}" alt="Story Image">                    <div class="story-text">
-                        <h3 class="story-title">${story.title}</h3>
-                        <p class="story-summary">${story.summary}</p>
-                        <a href="${story.link}" target="_blank">Read More</a>
-                    </div>
-                `;
-
-                container.appendChild(storyDiv);
+            closeBtn.addEventListener('click', () => {
+                ipcRenderer.send('close-widget');
             });
-        } catch (error) {
-            console.error("Failed to fetch stories:", error);
-        }
-    }
 
-    // Update stories when topic changes
-    topicInput.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
-            localStorage.setItem("selectedTopic", topicInput.value);
-            fetchStories(topicInput.value);
-        }
-    });
-});
+            // Load initial topic from localStorage or use a default
+            let topic = localStorage.getItem("selectedTopic") || "Technology";
+            topicInput.value = topic;
+            fetchStories(topic);
+
+            async function fetchStories(currentTopic) {
+                // Show skeleton loaders
+                let skeletonHTML = '';
+                for (let i = 0; i < 3; i++) {
+                    skeletonHTML += '<div class="skeleton bg-gray-800 rounded-lg h-28"></div>';
+                }
+                storiesContainer.innerHTML = skeletonHTML;
+
+                try {
+                    const stories = await ipcRenderer.invoke("fetch-stories", currentTopic);
+                    storiesContainer.innerHTML = ""; // Clear loaders
+
+                    if (stories.length === 0) {
+                        storiesContainer.innerHTML = `<p class="text-center text-gray-500 col-span-full py-10">No stories found for "${currentTopic}".</p>`;
+                        return;
+                    }
+
+                    stories.forEach(story => {
+                        const storyDiv = document.createElement("div");
+                        storyDiv.className = "story-card bg-gray-800 rounded-lg flex items-center p-3 cursor-pointer";
+                        storyDiv.onclick = () => require('electron').shell.openExternal(story.link);
+                        
+                        // Use a placeholder if no image is found
+                        const imageUrl = story.image || 'https://placehold.co/100x100/1F2937/4B5563?text=N/A';
+                        
+                        storyDiv.innerHTML = `
+                            <img src="${imageUrl}" alt="Story thumbnail" class="w-20 h-20 object-cover rounded-md mr-4 flex-shrink-0" onerror="this.onerror=null;this.src='https://placehold.co/100x100/1F2937/4B5563?text=Error';">
+                            <div class="story-text overflow-hidden">
+                                <h3 class="story-title font-bold text-md text-gray-200 truncate">${story.title}</h3>
+                                <p class="story-summary text-sm text-gray-400 mt-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${story.summary}</p>
+                            </div>
+                        `;
+                        storiesContainer.appendChild(storyDiv);
+                    });
+                } catch (error) {
+                    console.error("Failed to fetch stories:", error);
+                    storiesContainer.innerHTML = `<p class="text-center text-red-500 col-span-full py-10">Failed to fetch stories. Check console.</p>`;
+                }
+            }
+
+            // Update stories when topic changes
+            topicInput.addEventListener("keypress", (event) => {
+                if (event.key === "Enter") {
+                    const newTopic = topicInput.value.trim();
+                    if (newTopic) {
+                        localStorage.setItem("selectedTopic", newTopic);
+                        fetchStories(newTopic);
+                    }
+                }
+            });
+        });
