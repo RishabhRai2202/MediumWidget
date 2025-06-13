@@ -6,8 +6,8 @@ let mainWindow;
 
 app.whenReady().then(() => {
     mainWindow = new BrowserWindow({  
-        width: 422,
-        height: 454,
+        width: 600,
+        height: 600,
         alwaysOnTop: false,
         autoHideMenuBar: true,
         transparent: true,
@@ -18,6 +18,7 @@ app.whenReady().then(() => {
             contextIsolation: false
         }
     });
+
 
     mainWindow.loadFile('index.html');
     ipcMain.on('close-widget', () => {
